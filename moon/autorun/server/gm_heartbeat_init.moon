@@ -8,10 +8,15 @@ class Pump
         @interval = 2
         @timerName = "CFC_Heartbeat_Pump"
 
+    heartbeat: =>
+        Post @url .. "heartbeat", {}
+
+    start: =>
         timer.Create @timerName, @interval, 0, -> @heartbeat
 
-    heartbeat: =>
-        Post @url, {}
+    chill: =>
+        timer.Stop @timerName
+        Post @url .. "chil", {}
 
 export CFCHeartBeat
 
@@ -19,6 +24,9 @@ getUrl = ->
     url = File.Read "cfc/heartbeat_url.txt", "DATA"
     url and= Replace url, "\r", ""
     url and= Replace url, "\n", ""
-    url
 
 CFCHeartBeat = Pump getUrl!
+CFCHeartBeat.Start!
+
+
+hook.Add "ShutDown", "CFC_HeartBeat_Chill", -> CFCHeartBeat.chill!
