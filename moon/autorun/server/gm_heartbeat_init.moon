@@ -5,14 +5,16 @@ import Replace from string
 class Pump
     new: (url) =>
         @url = url
-        @interval = 2
+        @interval = 10
         @timerName = "CFC_Heartbeat_Pump"
 
     heartbeat: =>
         Post @url .. "heartbeat", {}
 
     start: =>
-        timer.Create @timerName, @interval, 0, -> @heartbeat
+        print("[GM Heartbeat] Started heartbeat timer")
+        timer.Remove @timerName
+        timer.Create @timerName, @interval, 0, -> @heartbeat!
 
     chill: =>
         timer.Stop @timerName
@@ -21,12 +23,13 @@ class Pump
 export CFCHeartBeat
 
 getUrl = ->
-    url = File.Read "cfc/heartbeat_url.txt", "DATA"
+    url = Read "cfc/heartbeat_url.txt", "DATA"
     url and= Replace url, "\r", ""
     url and= Replace url, "\n", ""
+    url
 
 CFCHeartBeat = Pump getUrl!
-CFCHeartBeat.Start!
+CFCHeartBeat\start!
 
 
 hook.Add "ShutDown", "CFC_HeartBeat_Chill", -> CFCHeartBeat.chill!
