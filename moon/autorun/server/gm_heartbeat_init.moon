@@ -6,7 +6,7 @@ import Replace from string
 class Pump
     new: (url) =>
         @url = url
-        @interval = 10
+        @interval = 5
         @timerName = "CFC_Heartbeat_Pump"
 
     heartbeat: =>
