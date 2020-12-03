@@ -9,7 +9,6 @@ class Pump
         @timerName = "CFC_Heartbeat_Pump"
 
     heartbeat: =>
-        Post @url .. "heartbeat", {}
         Post "#{@url}/heartbeat", {}
 
     start: =>
