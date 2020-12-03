@@ -2,7 +2,6 @@ import Post from http
 import Read from file
 import Replace from string
 
-
 class Pump
     new: (url) =>
         @url = url
@@ -11,17 +10,15 @@ class Pump
 
     heartbeat: =>
         Post @url .. "heartbeat", {}
+        Post "#{@url}/heartbeat", {}
 
     start: =>
         print("[GM Heartbeat] Started heartbeat timer")
-        timer.Remove @timerName
         timer.Create @timerName, @interval, 0, -> @heartbeat!
 
     chill: =>
         timer.Stop @timerName
-        Post @url .. "chil", {}
-
-export CFCHeartBeat
+        Post "#{@url}/chill", {}
 
 getUrl = ->
     url = Read "cfc/heartbeat_url.txt", "DATA"
@@ -29,8 +26,8 @@ getUrl = ->
     url and= Replace url, "\n", ""
     url
 
+export CFCHeartBeat
 CFCHeartBeat = Pump getUrl!
 CFCHeartBeat\start!
 
-
-hook.Add "ShutDown", "CFC_HeartBeat_Chill", -> CFCHeartBeat.chill!
+hook.Add "ShutDown", "CFC_HeartBeat_Chill", -> CFCHeartBeat\chill!
