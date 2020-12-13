@@ -30,3 +30,5 @@ CFCHeartBeat = Pump getUrl!
 CFCHeartBeat\start!
 
 hook.Add "ShutDown", "CFC_HeartBeat_Chill", -> CFCHeartBeat\chill!
+
+RunConsoleCommand "sv_hibernate_think", "1"
